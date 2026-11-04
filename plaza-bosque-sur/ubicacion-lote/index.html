@@ -44,14 +44,16 @@ var pol = L.geoJSON(LOTE, {
                     .bindPopup('<b>Vértice ' + p.vertice + '</b><br>Lado ' + p.lado + ': ' + p.rumbo + ', ' + p.distancia_m.toFixed(2) + ' m<br>UTM 13N X ' + p.utm_x.toFixed(3) + ' · Y ' + p.utm_y.toFixed(3) + '<br>' + f.geometry.coordinates[1].toFixed(6) + ', ' + f.geometry.coordinates[0].toFixed(6));
     else l.bindPopup('<b>' + p.nombre + '</b><br>' + p.superficie_m2.toLocaleString('es-MX') + ' m² · ' + p.perimetro_m + ' m<br><small>' + p.fuente + '</small>');
   }
-}).addTo(map);
+});
 var lotePol = pol.getLayers().filter(function (l) { return l.feature.geometry.type === 'Polygon'; })[0];
+// El encuadre va ANTES de agregar los vectores: si se agregan sin vista, el renderizador SVG de Leaflet falla ('reading min') y el lote no se dibuja (visto 2026-11-04).
+if (img === 'z18') map.setView([20.571466, -103.495011], 18); else if (img === 'z16') map.setView([20.571466, -103.495011], 16); else map.fitBounds(lotePol.getBounds().pad(0.6), {maxZoom: 19});
+pol.addTo(map);
 lotePol.bindTooltip('<b>PLAZA BOSQUES SUR</b><br>' + LOTE.features[0].properties.superficie_m2.toLocaleString('es-MX') + ' m²', {permanent: true, direction: 'center', className: 'llbl', opacity: 1});
 Object.keys(LUGARES).forEach(function (n) {
   L.circleMarker(LUGARES[n], {radius: 5, color: '#fff', fillColor: '#e0a826', fillOpacity: 1, weight: 1.5}).addTo(map)
    .bindTooltip(n, {permanent: true, direction: 'right', offset: [6, 0], className: 'llbl', opacity: 0.95});
 });
-if (img === 'z18') map.setView([20.571466, -103.495011], 18); else if (img === 'z16') map.setView([20.571466, -103.495011], 16); else map.fitBounds(lotePol.getBounds().pad(0.6));
 function bajarKML() {
   var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([KML], {type: 'application/vnd.google-earth.kml+xml'}));
   a.download = 'lote_plaza_bosques_sur.kml'; document.body.appendChild(a); a.click(); a.remove();
