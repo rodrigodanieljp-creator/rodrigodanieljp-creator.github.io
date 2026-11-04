@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plaza Bosques Sur · ubicación del lote</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:"Segoe UI",system-ui,sans-serif;background:#0E1613}
+  #map{position:absolute;inset:0}
+  .panel{position:absolute;left:10px;bottom:24px;z-index:800;background:rgba(14,22,19,.88);color:#fff;padding:12px 14px;border-radius:10px;max-width:300px;font-size:13px;line-height:1.4;box-shadow:0 2px 12px rgba(0,0,0,.4)}
+  .panel h1{font-size:16px;margin:0 0 4px;font-weight:600}
+  .panel b{color:#9ad88f}
+  .panel a,.panel button{display:inline-block;margin:6px 6px 0 0;padding:6px 10px;border-radius:6px;background:#2fa84f;color:#fff;text-decoration:none;border:0;font:inherit;font-size:12px;cursor:pointer}
+  .vlbl{background:rgba(255,255,255,.9);border:0;border-radius:4px;padding:1px 4px;font-size:11px;font-weight:600;color:#1b3d1f;box-shadow:none}
+  .llbl{background:rgba(14,22,19,.75);color:#fff;border:0;border-radius:4px;padding:2px 6px;font-size:12px;font-weight:600;box-shadow:none;white-space:nowrap}
+  .llbl::before{display:none}
+  body.img .panel,body.img .leaflet-control-zoom,body.img .leaflet-control-layers{display:none}
+  .attr{position:absolute;right:0;bottom:0;z-index:800;background:rgba(255,255,255,.8);font-size:10px;padding:2px 6px;color:#333}
+</style></head><body>
+<div id="map"></div>
+<div class="panel"><h1>Plaza Bosques Sur · Lote A</h1>
+Blvd. Bosques de Santa Anita 2301, Triventi Residencial, Tlajomulco de Zúñiga, Jal.<br>
+Superficie <b>1,625.47 m²</b> · perímetro <b>161.51 m</b><br>Centro <b>20.571466, -103.495011</b><br>
+<span style="opacity:.75">Cuadro de construcción, plano de lotificación PAGOPA (feb-2023), UTM 13N</span><br>
+<a href="https://www.google.com/maps/search/?api=1&query=20.571466,-103.495011" target="_blank" rel="noopener">Abrir en Google Maps</a>
+<button onclick="bajarKML()">Descargar KML</button></div>
+<script>
+var LOTE = {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"nombre": "Plaza Bosques Sur — Lote A", "superficie_m2": 1625.47, "perimetro_m": 161.506, "fuente": "Cuadro de construcción, plano de lotificación PAGOPA (feb-2023), UTM 13N", "crs_origen": "EPSG:32613"}, "geometry": {"type": "Polygon", "coordinates": [[[-103.4952751, 20.5713341], [-103.4952721, 20.5713664], [-103.4951124, 20.571676], [-103.494785, 20.5716204], [-103.4948502, 20.5712631], [-103.4952751, 20.5713341]]]}}, {"type": "Feature", "properties": {"vertice": 1, "lado": "1-2", "rumbo": "N 4°29'48.02\" E", "distancia_m": 3.59, "utm_x": 656840.077, "utm_y": 2275430.962}, "geometry": {"type": "Point", "coordinates": [-103.4952751, 20.5713341]}}, {"type": "Feature", "properties": {"vertice": 2, "lado": "2-3", "rumbo": "N 25°22'58.28\" E", "distancia_m": 38.1, "utm_x": 656840.359, "utm_y": 2275434.546}, "geometry": {"type": "Point", "coordinates": [-103.4952721, 20.5713664]}}, {"type": "Feature", "properties": {"vertice": 3, "lado": "3-4", "rumbo": "S 80°18'47.11\" E", "distancia_m": 34.68, "utm_x": 656856.69, "utm_y": 2275468.966}, "geometry": {"type": "Point", "coordinates": [-103.4951124, 20.571676]}}, {"type": "Feature", "properties": {"vertice": 4, "lado": "4-5", "rumbo": "S 9°13'31.46\" W", "distancia_m": 40.14, "utm_x": 656890.88, "utm_y": 2275463.13}, "geometry": {"type": "Point", "coordinates": [-103.494785, 20.5716204]}}, {"type": "Feature", "properties": {"vertice": 5, "lado": "5-1", "rumbo": "N 80°27'58.74\" W", "distancia_m": 44.99, "utm_x": 656884.445, "utm_y": 2275423.51}, "geometry": {"type": "Point", "coordinates": [-103.4948502, 20.5712631]}}]};
+var LUGARES = {"Bosques de Santa Anita": [20.5735061, -103.4894756], "El Origen": [20.5702746, -103.500074], "El Edén Residencial": [20.5745221, -103.4948692], "Bosque Real": [20.571748, -103.498334], "Naturezza": [20.5697315, -103.4942157], "Triventi Residencial": [20.5713491, -103.493574], "Paraíso Residencial": [20.5720321, -103.4982065], "Vicenza": [20.5763359, -103.4958572], "Bella Vicenza": [20.5758751, -103.4955212]};
+var KML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http://www.opengis.net/kml/2.2\"><Document>\n<name>Plaza Bosques Sur \u2014 Lote A</name>\n<description>Superficie 1,625.47 m\u00b2 \u00b7 per\u00edmetro 161.51 m \u00b7 Cuadro de construcci\u00f3n, plano de lotificaci\u00f3n PAGOPA (feb-2023), UTM 13N</description>\n<Style id=\"lote\"><LineStyle><color>ffffffff</color><width>3</width></LineStyle><PolyStyle><color>7f2fa84f</color></PolyStyle></Style>\n<Style id=\"v\"><IconStyle><scale>0.6</scale><Icon><href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png</href></Icon></IconStyle><LabelStyle><scale>0.8</scale></LabelStyle></Style>\n<Placemark><name>Plaza Bosques Sur \u2014 Lote A</name><styleUrl>#lote</styleUrl>\n<description>Lote A, Boulevard Bosques de Santa Anita 2301, Fracc. Triventi Residencial, Tlajomulco de Z\u00fa\u00f1iga, Jal.&#10;Superficie 1,625.47 m\u00b2 \u00b7 per\u00edmetro 161.51 m&#10;Centro 20.571466, -103.495011&#10;Cuadro de construcci\u00f3n, plano de lotificaci\u00f3n PAGOPA (feb-2023), UTM 13N</description>\n<Polygon><outerBoundaryIs><LinearRing><coordinates>-103.4952751,20.5713341,0 -103.4952721,20.5713664,0 -103.4951124,20.5716760,0 -103.4947850,20.5716204,0 -103.4948502,20.5712631,0 -103.4952751,20.5713341,0</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark>\n<Folder><name>V\u00e9rtices</name><Placemark><name>V1</name><styleUrl>#v</styleUrl><description>UTM 13N  X=656840.077  Y=2275430.962&#10;Lado 1-2: N 4\u00b029'48.02\" E  3.59 m</description><Point><coordinates>-103.4952751,20.5713341,0</coordinates></Point></Placemark><Placemark><name>V2</name><styleUrl>#v</styleUrl><description>UTM 13N  X=656840.359  Y=2275434.546&#10;Lado 2-3: N 25\u00b022'58.28\" E  38.10 m</description><Point><coordinates>-103.4952721,20.5713664,0</coordinates></Point></Placemark><Placemark><name>V3</name><styleUrl>#v</styleUrl><description>UTM 13N  X=656856.690  Y=2275468.966&#10;Lado 3-4: S 80\u00b018'47.11\" E  34.68 m</description><Point><coordinates>-103.4951124,20.5716760,0</coordinates></Point></Placemark><Placemark><name>V4</name><styleUrl>#v</styleUrl><description>UTM 13N  X=656890.880  Y=2275463.130&#10;Lado 4-5: S 9\u00b013'31.46\" W  40.14 m</description><Point><coordinates>-103.4947850,20.5716204,0</coordinates></Point></Placemark><Placemark><name>V5</name><styleUrl>#v</styleUrl><description>UTM 13N  X=656884.445  Y=2275423.510&#10;Lado 5-1: N 80\u00b027'58.74\" W  44.99 m</description><Point><coordinates>-103.4948502,20.5712631,0</coordinates></Point></Placemark></Folder>\n<LookAt><longitude>-103.495011</longitude><latitude>20.571466</latitude><range>350</range><tilt>0</tilt></LookAt>\n</Document></kml>\n";
+var q = new URLSearchParams(location.search), img = q.get('img');
+if (img) document.body.classList.add('img');
+var sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {maxZoom: 20, maxNativeZoom: 19, attribution: 'Imagen: Esri, Maxar, Earthstar Geographics'});
+var calles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '© OpenStreetMap contributors'});
+var etiquetas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {maxZoom: 19, attribution: ''});
+var map = L.map('map', {layers: [sat], zoomControl: !img, attributionControl: true, scrollWheelZoom: true});
+L.control.layers({'Satélite': sat, 'Calles': calles}, {'Nombres de lugares': etiquetas}, {collapsed: true}).addTo(map);
+L.control.scale({imperial: false}).addTo(map);
+var pol = L.geoJSON(LOTE, {
+  style: {color: '#ffffff', weight: 3, fillColor: '#2fa84f', fillOpacity: 0.45},
+  pointToLayer: function (f, ll) { return L.circleMarker(ll, {radius: 4, color: '#fff', fillColor: '#1b3d1f', fillOpacity: 1, weight: 1.5}); },
+  onEachFeature: function (f, l) {
+    var p = f.properties;
+    if (p.vertice) l.bindTooltip('V' + p.vertice, {permanent: !img || img === 'z18', direction: 'top', offset: [0, -4], className: 'vlbl'})
+                    .bindPopup('<b>Vértice ' + p.vertice + '</b><br>Lado ' + p.lado + ': ' + p.rumbo + ', ' + p.distancia_m.toFixed(2) + ' m<br>UTM 13N X ' + p.utm_x.toFixed(3) + ' · Y ' + p.utm_y.toFixed(3) + '<br>' + f.geometry.coordinates[1].toFixed(6) + ', ' + f.geometry.coordinates[0].toFixed(6));
+    else l.bindPopup('<b>' + p.nombre + '</b><br>' + p.superficie_m2.toLocaleString('es-MX') + ' m² · ' + p.perimetro_m + ' m<br><small>' + p.fuente + '</small>');
+  }
+}).addTo(map);
+var lotePol = pol.getLayers().filter(function (l) { return l.feature.geometry.type === 'Polygon'; })[0];
+lotePol.bindTooltip('<b>PLAZA BOSQUES SUR</b><br>' + LOTE.features[0].properties.superficie_m2.toLocaleString('es-MX') + ' m²', {permanent: true, direction: 'center', className: 'llbl', opacity: 1});
+Object.keys(LUGARES).forEach(function (n) {
+  L.circleMarker(LUGARES[n], {radius: 5, color: '#fff', fillColor: '#e0a826', fillOpacity: 1, weight: 1.5}).addTo(map)
+   .bindTooltip(n, {permanent: true, direction: 'right', offset: [6, 0], className: 'llbl', opacity: 0.95});
+});
+if (img === 'z18') map.setView([20.571466, -103.495011], 18); else if (img === 'z16') map.setView([20.571466, -103.495011], 16); else map.fitBounds(lotePol.getBounds().pad(0.6));
+function bajarKML() {
+  var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([KML], {type: 'application/vnd.google-earth.kml+xml'}));
+  a.download = 'lote_plaza_bosques_sur.kml'; document.body.appendChild(a); a.click(); a.remove();
+}
+</script></body></html>
